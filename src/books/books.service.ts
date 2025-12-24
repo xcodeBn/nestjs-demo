@@ -72,15 +72,15 @@ export class BooksService {
     this.books.push(newBook);
   }
 
-  update(id: number, book: { title: string; authorId: number }) {
+  update(id: number, book: { title: string; authorId: number }): Book {
     const bookToUpdateIndex = this.books.findIndex((book) => book.id === id);
     if (!bookToUpdateIndex || bookToUpdateIndex == -1) {
       throw new NotFoundException(`Book with ID ${id} not found`);
     }
-
-    return (this.books[bookToUpdateIndex] = {
+    this.books[bookToUpdateIndex] = {
       ...this.books[bookToUpdateIndex],
       ...book,
-    });
+    };
+    return this.books[bookToUpdateIndex];
   }
 }
