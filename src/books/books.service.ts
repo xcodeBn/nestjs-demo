@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { AuthorsService } from '../authors/authors.service';
 
 export interface Book {
@@ -44,7 +48,16 @@ export class BooksService {
 
   constructor(private readonly authorsService: AuthorsService) {}
 
-  findAll(): Book[] {
+  findAll(withAuthorDetails: boolean = false) {
+    if (withAuthorDetails) {
+      return this.books.map((book) => {
+        const { authorId, ...rest } = book;
+        return {
+          ...rest,
+          author: this.authorsService.findOne(authorId),
+        };
+      });
+    }
     return this.books;
   }
 
@@ -72,6 +85,10 @@ export class BooksService {
   }
 
   create(book: { title: string; authorId: number }): Book {
+    if (!book) {
+      throw new BadRequestException(`Bad Request`);
+    }
+
     const newBook = {
       id: this.books.length + 1,
       ...book,
@@ -81,6 +98,10 @@ export class BooksService {
   }
 
   update(id: number, book: { title: string; authorId: number }): Book {
+    if (!id || !book) {
+      throw new BadRequestException(`Bad Request`);
+    }
+
     const bookToUpdateIndex = this.books.findIndex((book) => book.id === id);
     if (!bookToUpdateIndex || bookToUpdateIndex == -1) {
       throw new NotFoundException(`Book with ID ${id} not found`);
