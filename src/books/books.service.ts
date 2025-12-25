@@ -48,10 +48,17 @@ export class BooksService {
     return this.books;
   }
 
-  findOne(id: number): Book {
+  findOne(id: number, withAuthorDetails: boolean = false) {
     const book = this.books.find((book) => book.id === id);
     if (!book) {
       throw new NotFoundException(`Book with ID ${id} not found`);
+    }
+    if (withAuthorDetails) {
+      const { authorId, ...rest } = book;
+      return {
+        ...rest,
+        author: this.authorsService.findOne(authorId),
+      };
     }
     return book;
   }
@@ -64,12 +71,13 @@ export class BooksService {
     this.books.splice(this.books.indexOf(book), 1);
   }
 
-  create(book: { title: string; authorId: number }) {
+  create(book: { title: string; authorId: number }): Book {
     const newBook = {
       id: this.books.length + 1,
       ...book,
     };
     this.books.push(newBook);
+    return newBook;
   }
 
   update(id: number, book: { title: string; authorId: number }): Book {
