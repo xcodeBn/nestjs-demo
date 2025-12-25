@@ -14,18 +14,9 @@ import { BooksService } from './books.service';
 export class BooksController {
   constructor(private readonly booksService: BooksService) {}
 
-  // TODO: Implement book controller methods
-  @Get(':id')
-  findOne(
-    @Param('id') id: string,
-    @Query('includeAuthor') includeAuthor?: boolean,
-  ) {
-    return this.booksService.findOne(+id, includeAuthor);
-  }
-
   @Get()
-  findAll() {
-    return this.booksService.findAll();
+  findAll(@Query('includeAuthor') includeAuthor?: boolean) {
+    return this.booksService.findAll(includeAuthor);
   }
 
   @Delete(':id')
