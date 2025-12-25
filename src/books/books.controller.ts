@@ -1,5 +1,14 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
-import { Book, BooksService } from './books.service';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  Query,
+} from '@nestjs/common';
+import { BooksService } from './books.service';
 
 @Controller('books')
 export class BooksController {
@@ -7,8 +16,11 @@ export class BooksController {
 
   // TODO: Implement book controller methods
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.booksService.findOne(+id);
+  findOne(
+    @Param('id') id: string,
+    @Query('includeAuthor') includeAuthor?: boolean,
+  ) {
+    return this.booksService.findOne(+id, includeAuthor);
   }
 
   @Get()
@@ -28,7 +40,6 @@ export class BooksController {
       authorId: +book.authorId,
     });
   }
-
 
   @Put(':id')
   update(
