@@ -11,6 +11,16 @@ export class PublishersService {
       name: 'idk',
       about: 'haha ',
     },
+    {
+      id: 2,
+      name: 'i do know',
+      about: 'very famous ',
+    },
+    {
+      id: 4,
+      name: 'ea',
+      about: 'we love money ',
+    },
   ];
 
   create(createPublisherDto: CreatePublisherDto) {
