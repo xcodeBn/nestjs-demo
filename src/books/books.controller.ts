@@ -5,6 +5,7 @@ import {
   Delete,
   Get,
   Param,
+  ParseBoolPipe,
   Post,
   Put,
   Query,
@@ -26,7 +27,7 @@ export class BooksController {
   @ApiResponse({ status: 200, description: 'Return all books.' })
   @Get()
   findAll(
-    @Query('includeAuthor', new DefaultValuePipe(false))
+    @Query('includeAuthor', new DefaultValuePipe(false), ParseBoolPipe)
     includeAuthor?: boolean,
   ) {
     return this.booksService.findAll(includeAuthor);
@@ -70,12 +71,21 @@ export class BooksController {
   @ApiResponse({ status: 400, description: 'Bad request.' })
   @Post()
   create(
-    @Body() book: { title: string; authorId: string; publisherId: string },
+    @Body()
+    book: {
+      title: string;
+      authorId: string;
+      publisherId: string;
+      genres: string[];
+    },
   ) {
     return this.booksService.create({
       ...book,
       authorId: +book.authorId,
       publisherId: +book.publisherId,
+      genres: book.genres.map((id) => {
+        return +id;
+      }),
     });
   }
 
@@ -99,11 +109,12 @@ export class BooksController {
   @Put(':id')
   update(
     @Param('id') id: string,
-    @Body() book: { title: string; authorId: string },
+    @Body() book: { title: string; authorId: string; genres: string[] },
   ) {
     return this.booksService.update(+id, {
       ...book,
       authorId: +book.authorId,
+      genres: book.genres.map((id) => +id),
     });
   }
 }

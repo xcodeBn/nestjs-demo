@@ -10,6 +10,7 @@ export class Book {
   title: string;
   authorId: number;
   publisherId: number;
+  genres: number[];
 }
 
 @Injectable()
@@ -20,36 +21,42 @@ export class BooksService {
       title: 'The Hobbit',
       authorId: 1,
       publisherId: 1,
+      genres: [1, 2],
     },
     {
       id: 2,
       title: 'The Fellowship of the Ring',
       authorId: 1,
       publisherId: 1,
+      genres: [1, 2],
     },
     {
       id: 3,
       title: 'The Two Towers',
       authorId: 1,
       publisherId: 1,
+      genres: [1, 2],
     },
     {
       id: 4,
       title: 'The Return of the King',
       authorId: 1,
       publisherId: 1,
+      genres: [1, 2],
     },
     {
       id: 5,
       title: 'The Colour of Magic',
       authorId: 2,
       publisherId: 1,
+      genres: [1, 2],
     },
     {
       id: 6,
       title: 'The Light Fantastic',
       authorId: 2,
       publisherId: 1,
+      genres: [1, 2],
     },
   ];
 
@@ -91,7 +98,12 @@ export class BooksService {
     this.books.splice(this.books.indexOf(book), 1);
   }
 
-  create(book: { title: string; authorId: number; publisherId: number }): Book {
+  create(book: {
+    title: string;
+    authorId: number;
+    publisherId: number;
+    genres: number[];
+  }): Book {
     if (!book) {
       throw new BadRequestException(`Bad Request`);
     }
@@ -104,7 +116,10 @@ export class BooksService {
     return newBook;
   }
 
-  update(id: number, book: { title: string; authorId: number }): Book {
+  update(
+    id: number,
+    book: { title: string; authorId: number; genres: number[] },
+  ): Book {
     if (!id || !book) {
       throw new BadRequestException(`Bad Request`);
     }
@@ -113,10 +128,10 @@ export class BooksService {
     if (!bookToUpdateIndex || bookToUpdateIndex == -1) {
       throw new NotFoundException(`Book with ID ${id} not found`);
     }
-    this.books[bookToUpdateIndex] = {
+
+    return (this.books[bookToUpdateIndex] = {
       ...this.books[bookToUpdateIndex],
       ...book,
-    };
-    return this.books[bookToUpdateIndex];
+    });
   }
 }
