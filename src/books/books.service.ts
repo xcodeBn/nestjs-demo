@@ -13,6 +13,7 @@ export class Book {
   genres: number[];
 }
 
+// TODO migrate to dtos
 @Injectable()
 export class BooksService {
   private books: Book[] = [
@@ -107,9 +108,14 @@ export class BooksService {
     if (!book) {
       throw new BadRequestException(`Bad Request`);
     }
+    //there's def a better way to do this, by using the dto i created however im too lazy
+    // for now this satisfies requirements
+    if (!book.title || !book.authorId || !book.publisherId) {
+      throw new BadRequestException(`Bad Request`);
+    }
 
     const newBook = {
-      id: this.books.length + 1,
+      id: this.books[this.books.length - 1].id + 1,
       ...book,
     };
     this.books.push(newBook);
@@ -125,7 +131,7 @@ export class BooksService {
     }
 
     const bookToUpdateIndex = this.books.findIndex((book) => book.id === id);
-    if (!bookToUpdateIndex || bookToUpdateIndex == -1) {
+    if (bookToUpdateIndex == -1) {
       throw new NotFoundException(`Book with ID ${id} not found`);
     }
 

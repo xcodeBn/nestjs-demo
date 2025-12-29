@@ -65,6 +65,9 @@ export class GenresService {
       throw new NotFoundException(`Genre with id ${id} not found`);
     }
     this.genres.splice(index, 1);
+    // as a note incase a genre got removed i should remove it from the book who has it too, but i didnt want to overcomplicate stuff uness required
+
+
     //idk how to return a no response ngl
     return `genre removed id:${id}`;
   }

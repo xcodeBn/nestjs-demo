@@ -24,7 +24,7 @@ export class PublishersService {
   ];
 
   create(createPublisherDto: CreatePublisherDto) {
-    const id = this.publishers.length + 1;
+    const id = this.publishers[this.publishers.length].id + 1;
     const newPublisher = { id, ...createPublisherDto };
     this.publishers.push(newPublisher);
     return newPublisher;
