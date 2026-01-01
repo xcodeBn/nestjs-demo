@@ -4,6 +4,8 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { AuthorsService } from '../authors/authors.service';
+import { CreateBookDto } from './dto/create-book.dto';
+import { UpdateBookDto } from './dto/update-book.dto';
 
 export class Book {
   id: number;
@@ -99,37 +101,16 @@ export class BooksService {
     this.books.splice(this.books.indexOf(book), 1);
   }
 
-  create(book: {
-    title: string;
-    authorId: number;
-    publisherId: number;
-    genres: number[];
-  }): Book {
-    if (!book) {
-      throw new BadRequestException(`Bad Request`);
-    }
-    //there's def a better way to do this, by using the dto i created however im too lazy
-    // for now this satisfies requirements
-    if (!book.title || !book.authorId || !book.publisherId) {
-      throw new BadRequestException(`Bad Request`);
-    }
-
+  create(createBookDto: CreateBookDto): Book {
     const newBook = {
       id: this.books[this.books.length - 1].id + 1,
-      ...book,
+      ...createBookDto,
     };
     this.books.push(newBook);
     return newBook;
   }
 
-  update(
-    id: number,
-    book: { title: string; authorId: number; genres: number[] },
-  ): Book {
-    if (!id || !book) {
-      throw new BadRequestException(`Bad Request`);
-    }
-
+  update(id: number, updateBookDto: UpdateBookDto): Book {
     const bookToUpdateIndex = this.books.findIndex((book) => book.id === id);
     if (bookToUpdateIndex == -1) {
       throw new NotFoundException(`Book with ID ${id} not found`);
@@ -137,7 +118,7 @@ export class BooksService {
 
     return (this.books[bookToUpdateIndex] = {
       ...this.books[bookToUpdateIndex],
-      ...book,
+      ...updateBookDto,
     });
   }
 }

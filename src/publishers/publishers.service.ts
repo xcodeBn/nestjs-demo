@@ -19,7 +19,7 @@ export class PublishersService {
     {
       id: 4,
       name: 'ea',
-      about: 'we love money ',
+      about: 'soemthing',
     },
   ];
 

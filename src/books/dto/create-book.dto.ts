@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsArray, IsInt, IsNotEmpty, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
 
 export class CreateBookDto {
   @ApiProperty({
@@ -33,5 +34,7 @@ export class CreateBookDto {
   publisherId: number;
 
   @IsArray()
+  @IsInt({ each: true })
+  @Type(() => Number)
   genres: number[];
 }
